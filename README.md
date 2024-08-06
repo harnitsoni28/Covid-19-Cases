@@ -25,6 +25,7 @@
   i would recommend to go with grafana because it is open source and good thing
   
 - setup grafana in local
+ https://grafana.com/grafana/plugins/grafana-worldmap-panel/
 
 - install plugin for worldmap
 
