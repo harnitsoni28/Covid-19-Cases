@@ -1,0 +1,40 @@
+package org.example;
+
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.functions;
+
+import static org.apache.spark.sql.functions.sum;
+
+public class Covid_19_Analysis {
+
+    public static void main(String[] arg){
+
+        SparkSession ss = SparkSession.builder().appName("Covid_19_Analysis").master("local[*]").getOrCreate();
+
+        Dataset<Row> covidDF= ss.read()
+                .option("header", "true")
+                .option("inferSchema", "true")
+                .csv("C:\\Users\\harni\\eclipse-workspace\\SparkBootCamp\\src\\main\\resources\\countries-aggregated.csv");
+
+        Dataset<Row> covidDataProcessed = covidDF.withColumn("Date", functions.to_date(covidDF.col("Date"), "yyyy-MM-dd"));
+
+        Dataset<Row> resultDF = covidDataProcessed.groupBy("Country", "Date")
+               .agg(
+
+                sum("Confirmed").alias("total_confirmed"),
+                sum("Recovered").alias("total_recovered"),
+                sum("Deaths").alias("total_death")
+       );
+
+       resultDF.show(120);
+
+      long x= resultDF.count();
+      System.out.println("@@@ "+x);
+
+       ss.stop();
+
+
+    }
+}
